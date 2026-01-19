@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Complete Your Order | E-LegalBoom</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+  <main class="container">
+    <h1>Complete Your Order</h1>
+
+    <div class="summary-box">
+      <p><strong>Selected Item:</strong> <span id="doc"></span></p>
+      <p><strong>Tier:</strong> <span id="tier"></span></p>
+      <p><strong>Price:</strong> $<span id="price"></span></p>
+    </div>
+
+    <button id="payBtn" class="primary">
+      Proceed to Secure Payment
+    </button>
+  </main>
+
+  <script>
+    // ================================
+    // READ FROM URL ONLY (AUTHORITATIVE)
+    // ================================
+    const params = new URLSearchParams(window.location.search);
+
+    const tier  = params.get("tier");
+    const doc   = params.get("doc");
+    const price = params.get("price");
+
+    // ================================
+    // PAY LINK MAP (SOURCE OF TRUTH)
+    // ================================
+    const PAY_LINKS = {
+      tier1: "https://pay.elegalboom.org/e4b79a60-0fd7-431c-8bfc-ae0",
+      tier2: "https://pay.elegalboom.org/aeda586f-65f5-4bf0-98f3-7a2",
+      tier3: "https://pay.elegalboom.org/71ca7144-e537-4fbd-823d-c10",
+      bundle: "https://pay.elegalboom.org/55c7cd3d-1048-4b8c-aadb-843",
+      unlimited30: "https://pay.elegalboom.org/c9c5e4f6-ac37-4fd3-98a8-a84"
+    };
+
+    // ================================
+    // DETERMINE PAY LINK
+    // ================================
+    let payLink = null;
+
+    if (tier === "1") payLink = PAY_LINKS.tier1;
+    if (tier === "2") payLink = PAY_LINKS.tier2;
+    if (tier === "3") payLink = PAY_LINKS.tier3;
+    if (tier === "bundle") payLink = PAY_LINKS.bundle;
+    if (tier === "unlimited30") payLink = PAY_LINKS.unlimited30;
+
+    // ================================
+    // POPULATE DISPLAY (COSMETIC ONLY)
+    // ================================
+    document.getElementById("tier").textContent = tier ?? "—";
+    document.getElementById("doc").textContent =
+      doc ? decodeURIComponent(doc) : "—";
+    document.getElementById("price").textContent = price ?? "—";
+
+    // ================================
+    // PAYMENT ACTION
+    // ================================
+    document.getElementById("payBtn").onclick = () => {
+      if (!payLink) {
+        alert("Payment link not found. Please return and try again.");
+        return;
+      }
+      window.location.href = payLink;
+    };
+  </script>
+</body>
+</html>

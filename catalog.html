@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>E-LegalBoom | Document Catalog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    body {
+      background: #f3f4f8;
+      margin: 0;
+      padding: 40px 20px;
+      color: #111827;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 6px;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: #6b7280;
+      margin-bottom: 40px;
+    }
+
+    .catalog-grid {
+      max-width: 1200px;
+      margin: auto;
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 30px;
+      align-items: start;
+    }
+
+    .tiers {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .tier {
+      background: #ffffff;
+      border-radius: 12px;
+      padding: 22px;
+      box-shadow: 0 8px 20px rgba(0,0,0,.06);
+    }
+
+    .tier h2 {
+      margin-top: 0;
+      margin-bottom: 14px;
+    }
+
+    .doc {
+      border: 1px solid #e5e7eb;
+      border-radius: 8px;
+      padding: 14px;
+      margin-bottom: 10px;
+      cursor: pointer;
+      transition: background .15s, border-color .15s;
+    }
+
+    .doc:hover {
+      background: #eef6ff;
+      border-color: #3b82f6;
+    }
+
+    .doc strong {
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .doc small {
+      color: #6b7280;
+      line-height: 1.4;
+    }
+
+    .preview-panel {
+      background: #ffffff;
+      border-radius: 12px;
+      padding: 24px;
+      box-shadow: 0 8px 20px rgba(0,0,0,.06);
+      position: sticky;
+      top: 20px;
+    }
+
+    .preview-panel h3 {
+      margin-top: 0;
+      margin-bottom: 12px;
+    }
+
+    .preview-box img {
+      max-width: 100%;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,.15);
+    }
+
+    .preview-note {
+      margin-top: 12px;
+      font-size: 13px;
+      color: #6b7280;
+    }
+
+    footer {
+      text-align: center;
+      font-size: 13px;
+      color: #6b7280;
+      margin-top: 50px;
+    }
+
+    @media (max-width: 900px) {
+      .catalog-grid {
+        grid-template-columns: 1fr;
+      }
+      .preview-panel {
+        position: static;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<h1>Select Your Legal Document</h1>
+<div class="subtitle">
+  Documents are grouped by tier. Click a document to continue to intake.
+</div>
+
+<div class="catalog-grid">
+
+  <!-- LEFT COLUMN -->
+  <div class="tiers">
+
+    <!-- TIER 1 -->
+    <div class="tier">
+      <h2>Tier 1 — $39</h2>
+
+      <div class="doc" data-doc="Non-Disclosure Agreement (NDA)"
+        onclick="selectDoc('Tier 1','Non-Disclosure Agreement (NDA)',39,link.tier1)">
+        <strong>Non-Disclosure Agreement (NDA)</strong>
+        <small>Protect confidential information shared between parties.</small>
+      </div>
+
+      <div class="doc" data-doc="Promissory Note"
+        onclick="selectDoc('Tier 1','Promissory Note',39,link.tier1)">
+        <strong>Promissory Note</strong>
+        <small>Formal agreement outlining repayment of a loan.</small>
+      </div>
+
+      <div class="doc" data-doc="Demand Letter"
+        onclick="selectDoc('Tier 1','Demand Letter',39,link.tier1)">
+        <strong>Demand Letter</strong>
+        <small>Formal request for payment or action before legal escalation.</small>
+      </div>
+
+      <div class="doc" data-doc="Cease and Desist Letter"
+        onclick="selectDoc('Tier 1','Cease and Desist Letter',39,link.tier1)">
+        <strong>Cease and Desist Letter</strong>
+        <small>Notice demanding unlawful or harmful behavior stop immediately.</small>
+      </div>
+    </div>
+
+    <!-- TIER 2 -->
+    <div class="tier">
+      <h2>Tier 2 — $59</h2>
+
+      <div class="doc" data-doc="Independent Contractor Agreement"
+        onclick="selectDoc('Tier 2','Independent Contractor Agreement',59,link.tier2)">
+        <strong>Independent Contractor Agreement</strong>
+        <small>Defines scope, payment, and obligations for contractors.</small>
+      </div>
+
+      <div class="doc" data-doc="Service Agreement"
+        onclick="selectDoc('Tier 2','Service Agreement',59,link.tier2)">
+        <strong>Service Agreement</strong>
+        <small>Outlines services, timelines, and responsibilities.</small>
+      </div>
+
+      <div class="doc" data-doc="Partnership Agreement"
+        onclick="selectDoc('Tier 2','Partnership Agreement',59,link.tier2)">
+        <strong>Partnership Agreement</strong>
+        <small>Establishes roles, profit sharing, and authority between partners.</small>
+      </div>
+
+      <div class="doc" data-doc="Consulting Agreement"
+        onclick="selectDoc('Tier 2','Consulting Agreement',59,link.tier2)">
+        <strong>Consulting Agreement</strong>
+        <small>Defines advisory services, fees, and deliverables.</small>
+      </div>
+    </div>
+
+    <!-- TIER 3 -->
+    <div class="tier">
+      <h2>Tier 3 — $99</h2>
+
+      <div class="doc" data-doc="Operating Agreement (LLC)"
+        onclick="selectDoc('Tier 3','Operating Agreement (LLC)',99,link.tier3)">
+        <strong>Operating Agreement (LLC)</strong>
+        <small>Defines ownership, governance, and management structure.</small>
+      </div>
+
+      <div class="doc" data-doc="Multi-Member LLC Agreement"
+        onclick="selectDoc('Tier 3','Multi-Member LLC Agreement',99,link.tier3)">
+        <strong>Multi-Member LLC Agreement</strong>
+        <small>Governs relationships among multiple LLC owners.</small>
+      </div>
+
+      <div class="doc" data-doc="Shareholder Agreement"
+        onclick="selectDoc('Tier 3','Shareholder Agreement',99,link.tier3)">
+        <strong>Shareholder Agreement</strong>
+        <small>Outlines shareholder rights, voting, and ownership transfer.</small>
+      </div>
+
+      <div class="doc" data-doc="Buy-Sell Agreement"
+        onclick="selectDoc('Tier 3','Buy-Sell Agreement',99,link.tier3)">
+        <strong>Buy-Sell Agreement</strong>
+        <small>Controls ownership transitions due to exit, death, or sale.</small>
+      </div>
+    </div>
+
+    <!-- TIER 4 -->
+    <div class="tier">
+      <h2>Tier 4 — $149 Entrepreneur Level</h2>
+
+      <div class="doc" data-doc="Entrepreneur Custom Legal Document"
+        onclick="selectDoc('Tier 4','Entrepreneur Custom Legal Document',149,link.tier4)">
+        <strong>Entrepreneur Custom Legal Document</strong>
+        <small>Advanced, founder-focused agreement tailored to your situation.</small>
+      </div>
+
+      <div class="doc" data-doc="Founder Agreement"
+        onclick="selectDoc('Tier 4','Founder Agreement',149,link.tier4)">
+        <strong>Founder Agreement</strong>
+        <small>Defines equity, roles, vesting, and founder responsibilities.</small>
+      </div>
+
+      <div class="doc" data-doc="Investor Readiness Agreement"
+        onclick="selectDoc('Tier 4','Investor Readiness Agreement',149,link.tier4)">
+        <strong>Investor Readiness Agreement</strong>
+        <small>Prepares structure and protections before fundraising.</small>
+      </div>
+
+      <div class="doc" data-doc="IP Assignment Agreement"
+        onclick="selectDoc('Tier 4','IP Assignment Agreement',149,link.tier4)">
+        <strong>IP Assignment Agreement</strong>
+        <small>Ensures intellectual property ownership is properly assigned.</small>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- RIGHT COLUMN -->
+  <div class="preview-panel">
+    <h3>Document Preview</h3>
+    <div class="preview-box">
+      <img id="docPreview" src="images/docs/nda.png" alt="Document preview">
+      <div class="preview-note">
+        Sample formatting preview. Final documents are customized to your information.
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  Questions? Email <a href="mailto:support@e-legalboom.com">support@e-legalboom.com</a>
+</footer>
+
+<script>
+  const link = {
+    tier1: "https://pay.elegalboom.org/e4b79a60-0fd7-431c-8bfc-ae0",
+    tier2: "https://pay.elegalboom.org/eeda586f-65f5-4bf0-98f3-7a2",
+    tier3: "https://pay.elegalboom.org/71ca7144-e537-4fbd-823d-c10",
+    tier4: "https://pay.elegalboom.org/55c7cd3d-1048-4b8c-aadb-843"
+  };
+
+  const previewMap = {
+    "Non-Disclosure Agreement (NDA)": "images/docs/nda.png",
+    "Promissory Note": "images/docs/promissory-note.png",
+    "Demand Letter": "images/docs/demand-letter.png",
+    "Cease and Desist Letter": "images/docs/cease-desist.png",
+    "Independent Contractor Agreement": "images/docs/independent-contractor.png",
+    "Service Agreement": "images/docs/service-agreement.png",
+    "Partnership Agreement": "images/docs/partnership-agreement.png",
+    "Consulting Agreement": "images/docs/consulting-agreement.png",
+    "Operating Agreement (LLC)": "images/docs/operating-agreement.png",
+    "Multi-Member LLC Agreement": "images/docs/multi-member-llc.png",
+    "Shareholder Agreement": "images/docs/shareholder-agreement.png",
+    "Buy-Sell Agreement": "images/docs/buy-sell.png",
+    "Entrepreneur Custom Legal Document": "images/docs/entrepreneur-custom.png",
+    "Founder Agreement": "images/docs/founder-agreement.png",
+    "Investor Readiness Agreement": "images/docs/investor-readiness.png",
+    "IP Assignment Agreement": "images/docs/ip-assignment.png"
+  };
+
+  const previewImg = document.getElementById("docPreview");
+
+  document.querySelectorAll(".doc").forEach(doc => {
+    doc.addEventListener("mouseenter", () => {
+      const key = doc.getAttribute("data-doc");
+      if (previewMap[key]) {
+        previewImg.src = previewMap[key];
+      }
+    });
+  });
+
+  function selectDoc(tier, documentName, price, payLink) {
+    const orderContext = { tier, document: documentName, price, payLink };
+    localStorage.setItem("orderContext", JSON.stringify(orderContext));
+    window.location.href = "intake.html";
+  }
+</script>
+
+</body>
+</html>
