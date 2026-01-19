@@ -127,28 +127,9 @@
     document.getElementById("tierName").innerText = tier;
     document.getElementById("totalPrice").innerText = `$${price}.00`;
 
-document.getElementById("payBtn").addEventListener("click", () => {
-  const payload = {
-    order_id: orderId,
-    document_name: documentName,
-    tier: tier,
-    price: price,
-    timestamp: new Date().toISOString()
-  };
-
-  fetch("https://hooks.zapier.com/hooks/catch/26063890/ugj17u0/", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify(payload)
-  }).catch(err => {
-    console.error("Zapier webhook failed", err);
-  });
-
-  // Do NOT block payment
-  window.location.href = payLink;
-});
-    </script>
+    document.getElementById("payBtn").addEventListener("click", () => {
+      window.location.href = payLink;
+    });
+  </script>
 </body>
 </html>
