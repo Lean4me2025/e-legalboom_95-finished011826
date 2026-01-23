@@ -1,12 +1,12 @@
-e<!DOCTYPE html>
+OCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>E-LegalBoom – Document Intake</title>
+  <title>E-LegalBoom — Document Intake</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <!-- Supabase JS v2 -->
-  <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <style>
     body { font-family: Arial, sans-serif; padding: 20px; max-width: 900px; margin: auto; }
@@ -23,42 +23,24 @@ e<!DOCTYPE html>
 </head>
 <body>
 
-<h1>E-LegalBoom – Client Intake</h1>
+<h1>E-LegalBoom — Client Intake</h1>
 
 <form id="intakeForm">
-
-  <!-- =========================
-       DOCUMENT / IDENTITY
-       ========================= -->
-  <h2>Document Selection</h2>
-  <label>
-    Document Type
-    <select name="doc_type" id="doc_type" required>
-      <option value="">Select…</option>
-      <option value="llc_operating_agreement">LLC Operating Agreement</option>
-      <option value="nda">Non-Disclosure Agreement</option>
-      <option value="services_agreement">Services Agreement</option>
-    </select>
-  </label>
 
   <!-- =========================
        CUSTOMER
        ========================= -->
   <h2>Customer Information</h2>
   <div class="row">
-    <div>
-      <label>First Name <input name="customer_first_name" required></label>
-    </div>
-    <div>
-      <label>Last Name <input name="customer_last_name" required></label>
-    </div>
+    <div><label>First Name <input name="customer_first_name" required></label></div>
+    <div><label>Last Name <input name="customer_last_name" required></label></div>
   </div>
   <label>Email <input name="customer_email" type="email" required></label>
   <label>Phone <input name="customer_phone"></label>
-  <label>Business Name <input name="customer_business_name"></label>
+  <label>Business / Entity Name <input name="customer_business_name"></label>
 
   <!-- =========================
-       ENTITY / JURISDICTION
+       ENTITY & JURISDICTION
        ========================= -->
   <h2>Entity & Jurisdiction</h2>
   <label>
@@ -73,6 +55,7 @@ e<!DOCTYPE html>
     </select>
   </label>
   <label>Entity Name <input name="entity_name"></label>
+
   <label>
     Governing State
     <select name="governing_state" required>
@@ -94,7 +77,7 @@ e<!DOCTYPE html>
   </label>
 
   <!-- =========================
-       PARTIES (STRUCTURED)
+       PARTIES
        ========================= -->
   <h2>Parties</h2>
   <small>Add the primary parties involved.</small>
@@ -116,14 +99,14 @@ e<!DOCTYPE html>
        ========================= -->
   <h2>Timeline</h2>
   <label>Urgency <input name="urgency"></label>
-  <label>Preferred Deadline <input name="preferred_deadline" type="date"></label>
+  <label>Preferred Deadline <input name="preferred_deadline" type="date" id="preferred_deadline"></label>
   <label>Additional Notes <textarea name="delivery_notes"></textarea></label>
 
   <!-- =========================
        VARIANT (15%)
        ========================= -->
   <div id="variantSection" class="variant">
-    <h3>Additional Details for This Document</h3>
+    <h3>Additional Details</h3>
 
     <label>Management Model
       <select name="management_model">
@@ -142,8 +125,7 @@ e<!DOCTYPE html>
       </select>
     </label>
 
-    <label>
-      Special Clauses
+    <label>Special Clauses
       <textarea name="special_clauses"></textarea>
     </label>
   </div>
@@ -157,7 +139,6 @@ e<!DOCTYPE html>
      ========================= */
   const SUPABASE_URL = "https://vvjbjfltqsivvxxifnvi.supabase.co";
   const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ2amJqZmx0cXNpdnZ4eGlmbnZpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTc5NzYzNTAsImV4cCI6MjA3MzU1MjM1MH0.F4zzcpCHl9v-Rnj0wgKJ5zBf1HteVyXelMLQDDEN28Q";
-
   const db = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
   /* =========================
@@ -169,42 +150,46 @@ e<!DOCTYPE html>
     return `ELB-${d}-${r}`;
   }
 
-  const docTypeSelect = document.getElementById("doc_type");
-  const variantSection = document.getElementById("variantSection");
-
-  docTypeSelect.addEventListener("change", () => {
-    // Simple V1 rule: some docs show variants
-    if (docTypeSelect.value === "llc_operating_agreement") {
-      variantSection.style.display = "block";
-    } else {
-      variantSection.style.display = "none";
-    }
+  // Default date to today
+  document.addEventListener("DOMContentLoaded", () => {
+    const today = new Date().toISOString().split("T")[0];
+    const dateField = document.getElementById("preferred_deadline");
+    if (dateField && !dateField.value) dateField.value = today;
   });
+
+  // Pull doc_type from tier/catalog
+  const params = new URLSearchParams(window.location.search);
+  const docType = params.get("doc_type");
+  if (!docType) {
+    alert("Missing document selection. Please return to the catalog.");
+    window.location.href = "/catalog.html";
+  }
+
+  // Variant visibility (V1 example)
+  const variantSection = document.getElementById("variantSection");
+  if (docType === "llc_operating_agreement") {
+    variantSection.style.display = "block";
+  }
 
   /* =========================
      SUBMIT
      ========================= */
   document.getElementById("intakeForm").addEventListener("submit", async (e) => {
     e.preventDefault();
-
     const fd = new FormData(e.target);
     const v = Object.fromEntries(fd.entries());
 
-    // Build parties array
     const parties = [];
     if (v.party1_name) parties.push({ name: v.party1_name, role: v.party1_role, email: v.party1_email });
     if (v.party2_name) parties.push({ name: v.party2_name, role: v.party2_role, email: v.party2_email });
 
-    // Variant payload (15%)
     const variant_data = {
       management_model: v.management_model || null,
       dispute_resolution: v.dispute_resolution || null,
       special_clauses: v.special_clauses || null,
-
-      // Stripe-ready metadata (inactive)
       stripe: {
-        product_key: v.doc_type,
-        price_cents: null,     // set later
+        product_key: docType,
+        price_cents: null,
         tier: null,
         success_url: "/payment-success",
         cancel_url: "/review-and-pay"
@@ -213,7 +198,8 @@ e<!DOCTYPE html>
 
     const payload = {
       order_id: generateOrderId(),
-      doc_type: v.doc_type,
+      request_uuid: crypto.randomUUID(),
+      doc_type: docType,
       intake_status: "pending",
 
       customer_first_name: v.customer_first_name,
@@ -233,20 +219,18 @@ e<!DOCTYPE html>
       delivery_notes: v.delivery_notes,
 
       payment_status: "pending",
-      payment_source: "godaddy",
-
       variant_data
     };
 
-    const { error } = await db.from("document_intake").insert([payload]);
+    payload.raw_payload = payload;
 
+    const { error } = await db.from("document_intake").insert([payload]);
     if (error) {
       alert("Error submitting intake: " + error.message);
       console.error(error);
       return;
     }
 
-    // Proceed to review & pay
     window.location.href = `/review-and-pay.html?order_id=${payload.order_id}`;
   });
 </script>
