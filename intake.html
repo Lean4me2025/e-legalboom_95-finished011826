@@ -188,7 +188,7 @@ OCTYPE html>
       dispute_resolution: v.dispute_resolution || null,
       special_clauses: v.special_clauses || null,
       stripe: {
-        product_key: docType,
+        product_key: v.doc_type,
         price_cents: null,
         tier: null,
         success_url: "/payment-success",
@@ -199,7 +199,7 @@ OCTYPE html>
     const payload = {
       order_id: generateOrderId(),
       request_uuid: crypto.randomUUID(),
-      doc_type: docType,
+      doc_type: v.docType,
       intake_status: "pending",
 
       customer_first_name: v.customer_first_name,
