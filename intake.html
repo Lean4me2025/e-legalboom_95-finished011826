@@ -1,66 +1,82 @@
-<!DOCTYPE html>
+e<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>E-LegalBoom Client Intake</title>
+  <title>E-LegalBoom – Document Intake</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <!-- Backend Client -->
+  <!-- Supabase JS v2 -->
   <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
 
   <style>
-    body { font-family: Arial, sans-serif; padding: 20px; }
-    h1, h2 { margin-top: 30px; }
+    body { font-family: Arial, sans-serif; padding: 20px; max-width: 900px; margin: auto; }
+    h1, h2, h3 { margin-top: 28px; }
     label { display: block; margin-top: 12px; }
-    input, select, textarea { width: 100%; padding: 6px; }
-    button { margin-top: 20px; padding: 10px 20px; }
+    input, select, textarea { width: 100%; padding: 8px; margin-top: 4px; }
+    textarea { min-height: 80px; }
+    .row { display: flex; gap: 16px; }
+    .row > div { flex: 1; }
+    .variant { border: 1px solid #ddd; padding: 16px; margin-top: 20px; display: none; }
+    button { margin-top: 24px; padding: 12px 24px; font-size: 16px; }
+    small { color: #666; }
   </style>
 </head>
 <body>
 
-<h1>E-LegalBoom Client Intake</h1>
+<h1>E-LegalBoom – Client Intake</h1>
 
 <form id="intakeForm">
 
-  <!-- CLIENT -->
-  <h2>Client Information</h2>
-  <label>First Name <input name="client_first_name" required></label>
-  <label>Last Name <input name="client_last_name" required></label>
-  <label>Email <input name="client_email" type="email" required></label>
-  <label>Phone <input name="client_phone"></label>
-  <label>Business Name <input name="client_business_name"></label>
-
-  <!-- ADDRESS -->
-  <h2>Address</h2>
-  <label>Street <input name="client_street"></label>
-  <label>City <input name="client_city"></label>
-
-  <label>State
-    <select name="client_state" required>
-      <option value="">Select State</option>
-      <option>AL</option><option>AK</option><option>AZ</option><option>AR</option>
-      <option>CA</option><option>CO</option><option>CT</option><option>DE</option>
-      <option>FL</option><option>GA</option><option>HI</option><option>ID</option>
-      <option>IL</option><option>IN</option><option>IA</option><option>KS</option>
-      <option>KY</option><option>LA</option><option>ME</option><option>MD</option>
-      <option>MA</option><option>MI</option><option>MN</option><option>MS</option>
-      <option>MO</option><option>MT</option><option>NE</option><option>NV</option>
-      <option>NH</option><option>NJ</option><option>NM</option><option>NY</option>
-      <option>NC</option><option>ND</option><option>OH</option><option>OK</option>
-      <option>OR</option><option>PA</option><option>RI</option><option>SC</option>
-      <option>SD</option><option>TN</option><option>TX</option><option>UT</option>
-      <option>VT</option><option>VA</option><option>WA</option><option>WV</option>
-      <option>WI</option><option>WY</option>
+  <!-- =========================
+       DOCUMENT / IDENTITY
+       ========================= -->
+  <h2>Document Selection</h2>
+  <label>
+    Document Type
+    <select name="doc_type" id="doc_type" required>
+      <option value="">Select…</option>
+      <option value="llc_operating_agreement">LLC Operating Agreement</option>
+      <option value="nda">Non-Disclosure Agreement</option>
+      <option value="services_agreement">Services Agreement</option>
     </select>
   </label>
 
-  <label>ZIP <input name="client_zip"></label>
-  <label>Country <input name="client_country" value="USA"></label>
+  <!-- =========================
+       CUSTOMER
+       ========================= -->
+  <h2>Customer Information</h2>
+  <div class="row">
+    <div>
+      <label>First Name <input name="customer_first_name" required></label>
+    </div>
+    <div>
+      <label>Last Name <input name="customer_last_name" required></label>
+    </div>
+  </div>
+  <label>Email <input name="customer_email" type="email" required></label>
+  <label>Phone <input name="customer_phone"></label>
+  <label>Business Name <input name="customer_business_name"></label>
 
-  <!-- DOCUMENT -->
-  <h2>Document Details</h2>
-  <label>Governing State
+  <!-- =========================
+       ENTITY / JURISDICTION
+       ========================= -->
+  <h2>Entity & Jurisdiction</h2>
+  <label>
+    Entity Type
+    <select name="entity_type">
+      <option value="">Select…</option>
+      <option>Individual</option>
+      <option>LLC</option>
+      <option>Corporation</option>
+      <option>Partnership</option>
+      <option>Trust</option>
+    </select>
+  </label>
+  <label>Entity Name <input name="entity_name"></label>
+  <label>
+    Governing State
     <select name="governing_state" required>
-      <option value="">Select State</option>
+      <option value="">Select…</option>
       <option>AL</option><option>AK</option><option>AZ</option><option>AR</option>
       <option>CA</option><option>CO</option><option>CT</option><option>DE</option>
       <option>FL</option><option>GA</option><option>HI</option><option>ID</option>
@@ -77,83 +93,160 @@
     </select>
   </label>
 
-  <label>Preferred Deadline <input name="preferred_deadline" type="date"></label>
-  <label>Urgency <input name="urgency"></label>
-  <label>Details <textarea name="details"></textarea></label>
-  <label>File Option <input name="file_option"></label>
-
-  <!-- PARTIES -->
+  <!-- =========================
+       PARTIES (STRUCTURED)
+       ========================= -->
   <h2>Parties</h2>
-  <label>Party 1 Name <input name="party1_name"></label>
-  <label>Party 1 Role <input name="party1_role"></label>
-  <label>Party 1 Email <input name="party1_email"></label>
+  <small>Add the primary parties involved.</small>
 
-  <label>Party 2 Name <input name="party2_name"></label>
-  <label>Party 2 Role <input name="party2_role"></label>
-  <label>Party 2 Email <input name="party2_email"></label>
+  <div class="row">
+    <div><label>Party Name <input name="party1_name"></label></div>
+    <div><label>Role <input name="party1_role"></label></div>
+    <div><label>Email <input name="party1_email"></label></div>
+  </div>
 
-  <label>Party 3 Name <input name="party3_name"></label>
-  <label>Party 3 Role <input name="party3_role"></label>
-  <label>Party 3 Email <input name="party3_email"></label>
+  <div class="row">
+    <div><label>Party Name <input name="party2_name"></label></div>
+    <div><label>Role <input name="party2_role"></label></div>
+    <div><label>Email <input name="party2_email"></label></div>
+  </div>
 
-  <label>Party 4 Name <input name="party4_name"></label>
-  <label>Party 4 Role <input name="party4_role"></label>
-  <label>Party 4 Email <input name="party4_email"></label>
+  <!-- =========================
+       TIMELINE
+       ========================= -->
+  <h2>Timeline</h2>
+  <label>Urgency <input name="urgency"></label>
+  <label>Preferred Deadline <input name="preferred_deadline" type="date"></label>
+  <label>Additional Notes <textarea name="delivery_notes"></textarea></label>
 
-  <!-- INTERNAL -->
-  <h2>Internal</h2>
-  <label>Order Status <input name="order_status" value="pending"></label>
-  <label>Notes <textarea name="notes"></textarea></label>
+  <!-- =========================
+       VARIANT (15%)
+       ========================= -->
+  <div id="variantSection" class="variant">
+    <h3>Additional Details for This Document</h3>
 
-  <button type="submit">Submit Intake</button>
+    <label>Management Model
+      <select name="management_model">
+        <option value="">Select…</option>
+        <option>Member-Managed</option>
+        <option>Manager-Managed</option>
+      </select>
+    </label>
+
+    <label>Dispute Resolution
+      <select name="dispute_resolution">
+        <option value="">Select…</option>
+        <option>Litigation</option>
+        <option>Arbitration</option>
+        <option>Mediation</option>
+      </select>
+    </label>
+
+    <label>
+      Special Clauses
+      <textarea name="special_clauses"></textarea>
+    </label>
+  </div>
+
+  <button type="submit">Continue to Review & Pay</button>
 </form>
 
 <script>
-  const ORDER_DB_URL = "https://vvjbjfltqsivvxxifnvi.supabase.co";
-  const ORDER_DB_KEY = "YOUR_ANON_KEY_HERE";
-  const orderDB = supabase.createClient(ORDER_DB_URL, ORDER_DB_KEY);
+  /* =========================
+     CONFIG
+     ========================= */
+  const SUPABASE_URL = "https://https://vvjbjfltqsivvxxifnvi.supabase.co";
+  const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ2amJqZmx0cXNpdnZ4eGlmbnZpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTc5NzYzNTAsImV4cCI6MjA3MzU1MjM1MH0.F4zzcpCHl9v-Rnj0wgKJ5zBf1HteVyXelMLQDDEN28Q";
 
+  const db = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+  /* =========================
+     HELPERS
+     ========================= */
   function generateOrderId() {
     const d = new Date().toISOString().slice(0,10).replace(/-/g,'');
     const r = Math.floor(1000 + Math.random() * 9000);
     return `ELB-${d}-${r}`;
   }
 
+  const docTypeSelect = document.getElementById("doc_type");
+  const variantSection = document.getElementById("variantSection");
+
+  docTypeSelect.addEventListener("change", () => {
+    // Simple V1 rule: some docs show variants
+    if (docTypeSelect.value === "llc_operating_agreement") {
+      variantSection.style.display = "block";
+    } else {
+      variantSection.style.display = "none";
+    }
+  });
+
+  /* =========================
+     SUBMIT
+     ========================= */
   document.getElementById("intakeForm").addEventListener("submit", async (e) => {
     e.preventDefault();
 
-    const formData = new FormData(e.target);
-    const payload = Object.fromEntries(formData.entries());
+    const fd = new FormData(e.target);
+    const v = Object.fromEntries(fd.entries());
 
-    payload.request_uuid = crypto.randomUUID();
-    payload.order_id = generateOrderId();
+    // Build parties array
+    const parties = [];
+    if (v.party1_name) parties.push({ name: v.party1_name, role: v.party1_role, email: v.party1_email });
+    if (v.party2_name) parties.push({ name: v.party2_name, role: v.party2_role, email: v.party2_email });
 
-    /* === 1. DOCUMENT REQUEST (INTENT) === */
-    const documentRequestPayload = {
-      ...payload,
-      payment_status: "pending",
-      source: "intake"
+    // Variant payload (15%)
+    const variant_data = {
+      management_model: v.management_model || null,
+      dispute_resolution: v.dispute_resolution || null,
+      special_clauses: v.special_clauses || null,
+
+      // Stripe-ready metadata (inactive)
+      stripe: {
+        product_key: v.doc_type,
+        price_cents: null,     // set later
+        tier: null,
+        success_url: "/payment-success",
+        cancel_url: "/review-and-pay"
+      }
     };
 
-    const { error: docErr } = await orderDB
-      .from("document_requests")
-      .insert([documentRequestPayload]);
+    const payload = {
+      order_id: generateOrderId(),
+      doc_type: v.doc_type,
+      intake_status: "pending",
 
-    if (docErr) {
-      alert("ERROR creating document request: " + docErr.message);
+      customer_first_name: v.customer_first_name,
+      customer_last_name: v.customer_last_name,
+      customer_email: v.customer_email,
+      customer_phone: v.customer_phone,
+      customer_business_name: v.customer_business_name,
+
+      entity_type: v.entity_type,
+      entity_name: v.entity_name,
+      governing_state: v.governing_state,
+      formation_state: v.governing_state,
+
+      parties,
+      urgency: v.urgency,
+      preferred_deadline: v.preferred_deadline || null,
+      delivery_notes: v.delivery_notes,
+
+      payment_status: "pending",
+      payment_source: "godaddy",
+
+      variant_data
+    };
+
+    const { error } = await db.from("document_intake").insert([payload]);
+
+    if (error) {
+      alert("Error submitting intake: " + error.message);
+      console.error(error);
       return;
     }
 
-    /* === 2. ORDER (LIFECYCLE) === */
-    const { error: orderErr } = await orderDB
-      .from("pweb_orders")
-      .insert([payload]);
-
-    if (orderErr) {
-      alert("ERROR creating order: " + orderErr.message);
-      return;
-    }
-
+    // Proceed to review & pay
     window.location.href = `/review-and-pay.html?order_id=${payload.order_id}`;
   });
 </script>
