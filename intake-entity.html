@@ -1,0 +1,23 @@
+<h2>Entity Information</h2>
+
+<form id="entityForm">
+  <label>Entity Name</label>
+  <input name="entity_name" required />
+
+  <label>Entity Type</label>
+  <select name="entity_type" required>
+    <option value="LLC">LLC</option>
+    <option value="CORP">Corporation</option>
+  </select>
+
+  <label>Formation State</label>
+  <input name="formation_state" required />
+
+  <h3>Members</h3>
+  <div id="members"></div>
+
+  <button type="button" onclick="addMember()">Add Member</button>
+  <button type="submit">Continue</button>
+</form>
+
+<script src="/js/saveEntityIntake.js"></script>
