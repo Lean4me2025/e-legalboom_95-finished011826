@@ -4,7 +4,6 @@
   <meta charset="UTF-8" />
   <title>E-LegalBoom Client Intake</title>
 
-  <!-- Backend Client (vendor-agnostic use) -->
   <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
 
   <style>
@@ -59,23 +58,24 @@
   <!-- DOCUMENT -->
   <h2>Document Details</h2>
   <label>Governing State
-  <select name="governing_state" required>
-    <option value="">Select State</option>
-    <option>AL</option><option>AK</option><option>AZ</option><option>AR</option>
-    <option>CA</option><option>CO</option><option>CT</option><option>DE</option>
-    <option>FL</option><option>GA</option><option>HI</option><option>ID</option>
-    <option>IL</option><option>IN</option><option>IA</option><option>KS</option>
-    <option>KY</option><option>LA</option><option>ME</option><option>MD</option>
-    <option>MA</option><option>MI</option><option>MN</option><option>MS</option>
-    <option>MO</option><option>MT</option><option>NE</option><option>NV</option>
-    <option>NH</option><option>NJ</option><option>NM</option><option>NY</option>
-    <option>NC</option><option>ND</option><option>OH</option><option>OK</option>
-    <option>OR</option><option>PA</option><option>RI</option><option>SC</option>
-    <option>SD</option><option>TN</option><option>TX</option><option>UT</option>
-    <option>VT</option><option>VA</option><option>WA</option><option>WV</option>
-    <option>WI</option><option>WY</option>
-  </select>
-</label>
+    <select name="governing_state" required>
+      <option value="">Select State</option>
+      <option>AL</option><option>AK</option><option>AZ</option><option>AR</option>
+      <option>CA</option><option>CO</option><option>CT</option><option>DE</option>
+      <option>FL</option><option>GA</option><option>HI</option><option>ID</option>
+      <option>IL</option><option>IN</option><option>IA</option><option>KS</option>
+      <option>KY</option><option>LA</option><option>ME</option><option>MD</option>
+      <option>MA</option><option>MI</option><option>MN</option><option>MS</option>
+      <option>MO</option><option>MT</option><option>NE</option><option>NV</option>
+      <option>NH</option><option>NJ</option><option>NM</option><option>NY</option>
+      <option>NC</option><option>ND</option><option>OH</option><option>OK</option>
+      <option>OR</option><option>PA</option><option>RI</option><option>SC</option>
+      <option>SD</option><option>TN</option><option>TX</option><option>UT</option>
+      <option>VT</option><option>VA</option><option>WA</option><option>WV</option>
+      <option>WI</option><option>WY</option>
+    </select>
+  </label>
+
   <label>Preferred Deadline <input name="preferred_deadline" type="date"></label>
   <label>Urgency <input name="urgency"></label>
   <label>Details <textarea name="details"></textarea></label>
@@ -109,52 +109,37 @@
 </form>
 
 <script>
-  /* ============================================================
-     CONFIG — PSEUDONAME (NO VENDOR COUPLING)
-     ============================================================ */
+const DB_URL = "https://vvjbjfltqsivvxxifnvi.supabase.co";
+const DB_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ2amJqZmx0cXNpdnZ4eGlmbnZpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTc5NzYzNTAsImV4cCI6MjA3MzU1MjM1MH0.F4zzcpCHl9v-Rnj0wgKJ5zBf1HteVyXelMLQDDEN28Q";
+const db = supabase.createClient(DB_URL, DB_KEY);
 
-  const ORDER_DB_URL = "https://vvjbjfltqsivvxxifnvi.supabase.co";
-  const ORDER_DB_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ2amJqZmx0cXNpdnZ4eGlmbnZpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTc5NzYzNTAsImV4cCI6MjA3MzU1MjM1MH0.F4zzcpCHl9v-Rnj0wgKJ5zBf1HteVyXelMLQDDEN28Q";
+function generateOrderId() {
+  const d = new Date().toISOString().slice(0,10).replace(/-/g,'');
+  const r = Math.floor(1000 + Math.random() * 9000);
+  return `ELB-${d}-${r}`;
+}
 
-  const orderDB = supabase.createClient(ORDER_DB_URL, ORDER_DB_KEY);
+document.getElementById("intakeForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
 
-  /* ============================================================
-     ORDER ID GENERATION (AUTHORITATIVE)
-     ============================================================ */
+  const formData = new FormData(e.target);
+  const payload = Object.fromEntries(formData.entries());
 
-  function generateOrderId() {
-    const d = new Date().toISOString().slice(0,10).replace(/-/g,'');
-    const r = Math.floor(1000 + Math.random() * 9000);
-    return `ELB-${d}-${r}`;
+  payload.order_id = generateOrderId();
+  payload.request_uuid = crypto.randomUUID();
+
+  const { error } = await db
+    .from("document_intake")
+    .insert([payload]);
+
+  if (error) {
+    console.error(error);
+    alert("ERROR submitting intake: " + error.message);
+    return;
   }
 
-  /* ============================================================
-     SUBMIT HANDLER
-     ============================================================ */
-
-  document.getElementById("intakeForm").addEventListener("submit", async (e) => {
-    e.preventDefault();
-
-    const formData = new FormData(e.target);
-    const payload = Object.fromEntries(formData.entries());
-
-    // Canonical identifiers
-    payload.request_uuid = crypto.randomUUID();
-    payload.order_id = generateOrderId();
-
-    const { error } = await orderDB
-      .from("pweb_orders")
-      .insert([payload]);
-
-    if (error) {
-      console.error(error);
-      alert("ERROR submitting intake: " + error.message);
-      return;
-    }
-
-    // 🚀 FLOW CONTINUES HERE
-    window.location.href = `/review-and-pay.html?order_id=${payload.order_id}`;
-  });
+  window.location.href = `/review-and-pay.html?order_id=${payload.order_id}`;
+});
 </script>
 
 </body>
